@@ -1,4 +1,4 @@
-import os
+import os, gc
 import random
 import time
 from hashlib import shake_256
@@ -14,7 +14,7 @@ from utilities.discrete_log import BiDLP, discrete_log_pari
 from utilities.supersingular import torsion_basis, torsion_basis_with_pairing
 
 proof.all(False)    
-
+gc.disable()
 
 #set_random_seed(1)
 #random.seed(int(1))
@@ -300,7 +300,10 @@ for i, lambda_ in enumerate([128, 192, 256]):
         Q23x = QA + QB + Y0
 
         imP23x, imQ23x = eval_dimtwo_isog(Phi, A-deg, P23x, Q23x, 4*A*B*x)
-
+        resP = Phi(CouplePoint(PA, Phi.domain()[1](0)))
+        resQ = Phi(CouplePoint(QA, Phi.domain()[1](0)))
+        imPA1, imPA2 = resP[0], resP[1]
+        imQA1, imQA2 = resQ[0], resQ[1]
         X_A = inverse_mod(4*A*B, x) * (4*A*B * imP23x)
         Y_A = inverse_mod(4*A*B, x) * (4*A*B * imQ23x)
 

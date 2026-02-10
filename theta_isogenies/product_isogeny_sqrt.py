@@ -2,7 +2,7 @@ from theta_isogenies.gluing_isogeny import GluingThetaIsogeny
 from theta_isogenies.isomorphism import SplittingIsomorphism
 from theta_isogenies.isogeny import ThetaIsogeny
 from theta_isogenies.product_isogeny import EllipticProductIsogeny
-from theta_isogenies.isogeny_sqrt import ThetaIsogeny4, ThetaIsogeny2
+from theta_isogenies.isogeny_sqrt_ext import ThetaIsogeny4, ThetaIsogeny2
 from utilities.strategy import optimised_strategy
 
 
@@ -21,9 +21,9 @@ class EllipticProductIsogenySqrt(EllipticProductIsogeny):
 
     def get_strategy(self):
         st = optimised_strategy(self.n - 2)
-        print("Strategy:", st)
-        print(len(st))
-        return optimised_strategy(self.n - 2)
+        # print("Strategy:", st)
+        # print(len(st))
+        return st
 
     def isogeny_chain(self, kernel):
         """ """

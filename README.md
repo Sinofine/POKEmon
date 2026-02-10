@@ -1,3 +1,11 @@
+# POKEmon
+A SageMath PoC implementation of the unpublished POKEmon protocol.
+
+- `pokemon.sage`: Use built-in methods to perform isogeny calculations, slower.
+- `pokemon_xcord.sage`: Use x-coordinate only methods to perform isogeny calcs, usually faster.
+- `.ext` version: Under field extension, unfinished.
+
+You may need `diskcache` to run the code.
 # POKÉ
 
 A SageMath proof-of-concept implementation of the isogeny-based public-key encryption protocol POKÉ, accompanying the research paper [POKÉ: A Compact and Efficient PKE from Higher-dimensional Isogenies](https://eprint.iacr.org/2024/624) by Andrea Basso and Luciano Maino.

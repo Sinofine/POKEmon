@@ -141,7 +141,7 @@ def torsion_basis_with_pairing_2e(E, e):
     return P, Q, ePQ
 
 
-def torsion_basis_2e(E, e, montgomery: False):
+def torsion_basis_2e(E, e, montgomery=False):
     """
     Wrapper function around torsion_basis_with_pairing which only
     returns the torsion basis <P,Q> = E[2^e]

@@ -58,14 +58,14 @@ Future Work:
 - Include isomorphisms of Kummer Lines
 - allow composition by defining __mul__ on isogenies to create a composite isogeny
 """
-
+import time
 # Sage imports
 from sage.all import prod, ZZ, PolynomialRing
 from sage.rings.generic import ProductTree
 
 # Local imports
 from montgomery_isogenies.kummer_line import KummerLine, KummerPoint
-
+from utilities.fast_sqrt import sqrt_Fp2
 # =================================================== #
 # Generic class for creating an isogeny between       #
 # KummerLines of Montgomery model curves using x-only #
@@ -156,10 +156,10 @@ class KummerLineIsogeny_Velu(KummerLineIsogeny_Generic):
 
         # Compute the codomain, we need different formula for even and
         # odd degree
-        if self._degree == 2:
+        # if self._degree == 2:
             # We cannot use the point (0 : 0 : 1) as the kernel for
             # these formula
-            assert self._kernel.XZ()[0]
+            # assert self._kernel.XZ()[0]
 
         # Compute the codomain
         self._codomain = self._compute_codomain()
@@ -240,7 +240,9 @@ class KummerLineIsogeny_Velu(KummerLineIsogeny_Generic):
         """
         # Extract kernel point
         XK, ZK = self._kernel.XZ()
-        assert XK, "XK Cannot be zero"
+        A, C = self._domain.extract_constants()
+        if not XK:
+            return -2*A, sqrt_Fp2(self._domain.base_ring()(A*A-4*C*C))
 
         # C = ZK^2
         C = ZK * ZK
@@ -299,10 +301,15 @@ class KummerLineIsogeny_Velu(KummerLineIsogeny_Generic):
         evaluating an even degree isogeny on the point P
         """
         XK, ZK = self._kernel.XZ()
-        assert XK, "XK cannot be zero"
+        # assert XK, "XK cannot be zero"
+        A, C = self._domain.extract_constants()
 
         XP, ZP = P.XZ()
 
+        if not XK:
+            T8 = C*XP*XP+A*XP*ZP+C*ZP*ZP
+            T9 = XP*ZP*sqrt_Fp2(self._domain.base_ring()(A*A-4*C*C))
+            return self._codomain((T8, T9))
         T0 = XK + ZK
         T1 = XK - ZK
         T2 = XP + ZP
@@ -621,12 +628,12 @@ def factored_kummer_isogeny(K, P, order, threshold=1000):
         out a point P of order l**e
         https://trac.sagemath.org/ticket/34239
         """
-
+        
         if l > threshold:
             KummerLineIsogenyAlgorithm = KummerLineIsogeny_VeluSqrt
         else:
             KummerLineIsogenyAlgorithm = KummerLineIsogeny_Velu
-
+            
         def recursive_sparse_isogeny(Q, k):
             assert k
             if k == 1:  # base case
@@ -642,7 +649,6 @@ def factored_kummer_isogeny(K, P, order, threshold=1000):
             R = recursive_sparse_isogeny(Q2, k1)
 
             return L + R
-
         return recursive_sparse_isogeny(P, e)
 
     # Ensure P is a point on E
@@ -665,6 +671,8 @@ def factored_kummer_isogeny(K, P, order, threshold=1000):
 
     psi_list = []
     phi_list = []
+    
+    
     for l, e in cofactor.factor():
         # Map P through chain length e of l-isogenies
         P = evaluate_factored_kummer_isogeny(psi_list, P)
@@ -677,7 +685,6 @@ def factored_kummer_isogeny(K, P, order, threshold=1000):
         # Use Q as kernel of degree l^e isogeny
         Q = cofactor * P
         psi_list = sparse_isogeny_prime_power(Q, l, e, threshold=threshold)
-
         phi_list += psi_list
 
     return phi_list
