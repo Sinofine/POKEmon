@@ -328,13 +328,13 @@ def one_point(E0, E1, P0_op, phi1P0, d, points, tempx, tempy):
                 break
         except:
             continue
-        target_pairing = zeta^d
-        ee = P1_op.weil_pairing(S1, 2^(2*a), algorithm='pari')
-        ii = discrete_log_pari(target_pairing, ee, 2^(2*a))
-        Q1_op = P1_op+ii*S1
-        _E1 = KummerLine(E1)
-        _P1_op = _E1(P1_op)
-        _Q1_op = _E1(Q1_op)
+    target_pairing = zeta^d
+    ee = P1_op.weil_pairing(S1, 2^(2*a), algorithm='pari')
+    ii = discrete_log_pari(target_pairing, ee, 2^(2*a))
+    Q1_op = P1_op+ii*S1
+    _E1 = KummerLine(E1)
+    _P1_op = _E1(P1_op)
+    _Q1_op = _E1(Q1_op)
         
     _K2_prime = n * _P1_op
     
@@ -584,7 +584,7 @@ for pval in prime_params:
     msg = bytes("你好! 我是小猫", 'utf-8')
     succ = 0
     failreason = []
-    run_time = 10
+    run_time = 100
 
     for trial in range(run_time):
         # Timing keygen
