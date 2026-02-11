@@ -1,8 +1,8 @@
 # ================================================ #
 #     Compute optimised strategy for (2,2)-chain   #
 # ================================================ #
-from diskcache import Cache
-cache = Cache("strategy")
+# from diskcache import Cache
+# cache = Cache("strategy")
 def optimised_strategy_old(n, mul_c=1):
     """
     Algorithm 60: https://sike.org/files/SIDH-spec.pdf
@@ -36,7 +36,7 @@ import sys
 sys.setrecursionlimit(1500)
 
 # fmt: off
-@cache.memoize()
+# @cache.memoize()
 def optimised_strategy(n):
     """
     A modification of
